@@ -1,7 +1,7 @@
 from sklearn.ensemble import IsolationForest
 import numpy as np
 
-TRAINING_PACKET_LIMIT=10
+TRAINING_PACKET_LIMIT=200
 ANOMALY_THRESHOLD=0.25
 
 model=IsolationForest(
