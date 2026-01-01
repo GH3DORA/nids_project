@@ -11,14 +11,14 @@ model=IsolationForest(
 )
 
 def extract_features(packet):
+    if not packet.haslayer("IP"):
+        return
+    
     packet_size=len(packet)
-    protocol=0
+    protocol=packet["IP"].proto
     src_port=0
     dst_port=0
-
-    if (packet.haslayer("IP")):
-        protocol=packet["IP"].proto
-
+    
     if (packet.haslayer("TCP")):
         src_port=packet["TCP"].sport
         dst_port=packet["TCP"].dport
