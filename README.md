@@ -83,7 +83,7 @@ This allows detection of **previously unseen or zero-day–style attacks**.
 NIDS/
 │
 ├── main.py          # Entry point, packet capture loop
-├── sniffer.py       # Packet sniffing logic
+├── sniffing.py       # Packet sniffing logic
 ├── analysis.py      # Rule-based attack detection
 ├── ml_detector.py   # ML anomaly detection (Isolation Forest)
 ├── rules.py         # Thresholds and detection parameters
@@ -111,7 +111,7 @@ The system is intentionally modular to reflect production-grade security tools.
 
 1. `sniffer.py` captures live packets
 2. Packets are passed to `analysis.py` for rule-based checks
-3. Packets are simultaneously analyzed by `ml_detector.py`
+3. Packets are used to train and simultaneously analyzed by `ml_detector.py`
 4. Detected attacks or anomalies trigger alerts
 5. Alerts are logged and packets are optionally stored
 
@@ -134,11 +134,8 @@ Through this project, the following cybersecurity concepts are demonstrated:
 
 ## 🔮 Future Enhancements
 
-* Active response (automatic IP blocking via firewall rules)
 * Feature-rich ML models (time-based and flow-based features)
 * Visualization dashboard (Grafana / Flask)
-* Signature updates and rule learning
-* Distributed deployment support
 
 ---
 
