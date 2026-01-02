@@ -3,6 +3,8 @@ import time
 from rules import PORT_SCAN_THRESHOLD, PORT_SCAN_TIME_WINDOW, SYN_FLOOD_THRESHOLD, SYN_FLOOD_WINDOW_TIME, ICMP_THRESHOLD, ICMP_TIME_WINDOW, BRUTE_FORCE_THRESHOLD, BRUTE_FORCE_SENSITIVE_PORTS, BRUTE_FORCE_TIME_WINDOW
 from logger import log_alert
 from ml_detector import analyze_packet_ml
+from features.flow_features import update_flow, extract_flow_features
+from features.time_features import update_time_features, extract_time_features
 
 port_activity=defaultdict(list)
 syn_activity=defaultdict(list)
@@ -104,7 +106,15 @@ def analyze_packet(packet):
                 )
 
     # ========================= ML MODEL CHECK =========================
-    ml_result=analyze_packet_ml(packet)
+    update_flow(packet)
+    update_time_features(packet)
+    time_features=extract_time_features(packet)
+    flow_features=extract_flow_features(packet)
+    if time_features is None or flow_features is None:
+        return
+    combined_features=time_features+flow_features
+    # OLD -> ml_result=analyze_packet_ml(packet). Improve  detection by checking with flow and time features.
+    ml_result=analyze_packet_ml(combined_features)
     if ml_result:
         log_alert(
             "ANOMALY",
