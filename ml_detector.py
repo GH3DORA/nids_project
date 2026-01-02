@@ -2,10 +2,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 
-TRAINING_LIMIT=100
+TRAINING_LIMIT=10
 ANOMALY_THRESHOLD=-0.15
-
-scaler=StandardScaler()
 
 models={}
 scalers={}
@@ -20,12 +18,12 @@ for c in classes:
         contamination=0.03,
         random_state=42
     )
-    scalers[c]=StandardScaler
+    scalers[c]=StandardScaler()
     training_buffers[c]=[]
     trained[c]=False
 
 def train_model(traffic_class):
-    X=np.array([training_buffers[traffic_class]])
+    X=np.array(training_buffers[traffic_class])
     X_scaled=scalers[traffic_class].fit_transform(X)
     models[traffic_class].fit(X_scaled)
     trained[traffic_class]=True
