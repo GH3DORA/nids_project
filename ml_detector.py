@@ -1,8 +1,8 @@
 from sklearn.ensemble import IsolationForest
 import numpy as np
 
-TRAINING_LIMIT=200
-ANOMALY_THRESHOLD=0.25
+TRAINING_LIMIT=100
+ANOMALY_THRESHOLD=0.0
 
 model=IsolationForest(
     n_estimators=100,
