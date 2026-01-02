@@ -1,7 +1,7 @@
 import time
 from collections import defaultdict, deque
 
-TIME_WINDOW=10 #sliding window
+TIME_WINDOW=10
 
 packet_times=defaultdict(deque)
 packet_sizes=defaultdict(deque)
