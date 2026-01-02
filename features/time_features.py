@@ -30,7 +30,7 @@ def update_time_features(packet):
     packet_sizes[src_ip].append((current_time,len(packet)))
     if packet.haslayer("TCP"):
         dst_ports[src_ip].append((current_time,packet["TCP"].dport))
-        if packet["TCP"].flags == "S":
+        if packet["TCP"].flags & 0x02:
             syn_packets[src_ip].append((current_time))
     if packet.haslayer("ICMP"): 
         icmp_packets[src_ip].append((current_time))
@@ -41,9 +41,13 @@ def extract_time_features(packet):
         return
     
     src_ip=packet["IP"].src
-    packet_rate=len(packet_times[src_ip])/TIME_WINDOW
-    average_packet_size=sum(packet_sizes[src_ip])/len(packet_times[src_ip]) if len(packet_times[src_ip])>0 else 0
-    unique_ports=len(set(dst_ports[src_ip]))
+    packet_count=len(packet_times[src_ip])
+    packet_rate=packet_count/TIME_WINDOW
+
+    total_bytes=sum(size for _,size in packet_sizes[src_ip])
+    average_packet_size=total_bytes/packet_count if packet_count>0 else 0
+
+    unique_ports=len(set(port for _,port in dst_ports[src_ip]))
     syn_rate=len(syn_packets[src_ip])/TIME_WINDOW
     icmp_rate=len(icmp_packets[src_ip])/TIME_WINDOW
 
