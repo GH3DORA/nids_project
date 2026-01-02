@@ -105,7 +105,21 @@ def analyze_packet(packet):
                     f"Login attempts - {len(login_attempts[src_ip])}"
                 )
 
-    # ========================= ML MODEL CHECK =========================
+    # ========================= ML MODEL =========================
+
+    def get_traffic_class(packet):
+        if packet.haslayer("ICMP"):
+            return "ICMP"
+        if packet.haslayer("TCP"):
+            if packet["TCP"].dport in [80,443]:
+                return "WEB"
+            if packet["TCP"].dport in [21,22,23]:
+                return "LOGIN"
+            return "TCP_OTHER"
+        if packet.haslayer("UDP"):
+            return "UDP"
+        return "OTHER"
+    traffic_class=get_traffic_class(packet)
     update_flow(packet)
     update_time_features(packet)
     time_features=extract_time_features(packet)
@@ -114,14 +128,14 @@ def analyze_packet(packet):
         return
     combined_features=time_features+flow_features
     # OLD -> ml_result=analyze_packet_ml(packet). Improve  detection by checking with flow and time features.
-    ml_result=analyze_packet_ml(combined_features)
+    ml_result=analyze_packet_ml(combined_features,traffic_class)
     if ml_result is not None:
         log_alert(
             "ANOMALY",
             src_ip,
             dst_ip,
             protocol,
-            f"Anomaly score = {ml_result}"
+            f"Traffic Class = {traffic_class}, Anomaly score = {ml_result}"
         )
 
 
