@@ -26,14 +26,14 @@ def update_time_features(packet):
     current_time=time.time()
     src_ip=packet["IP"].src
 
-    packet_times[src_ip].append(current_time)
-    packet_sizes[src_ip].append(current_time,len(packet))
+    packet_times[src_ip].append((current_time))
+    packet_sizes[src_ip].append((current_time,len(packet)))
     if packet.haslayer("TCP"):
-        dst_ports[src_ip].append(current_time,packet["TCP"].dport)
+        dst_ports[src_ip].append((current_time,packet["TCP"].dport))
         if packet["TCP"].flags == "S":
-            syn_packets[src_ip].append(current_time)
+            syn_packets[src_ip].append((current_time))
     if packet.haslayer("ICMP"): 
-        icmp_packets[src_ip].append(current_time)
+        icmp_packets[src_ip].append((current_time))
     cleanup(src_ip,current_time)
 
 def extract_time_features(packet):
