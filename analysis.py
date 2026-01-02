@@ -115,7 +115,7 @@ def analyze_packet(packet):
     combined_features=time_features+flow_features
     # OLD -> ml_result=analyze_packet_ml(packet). Improve  detection by checking with flow and time features.
     ml_result=analyze_packet_ml(combined_features)
-    if ml_result:
+    if ml_result is not None:
         log_alert(
             "ANOMALY",
             src_ip,
