@@ -121,7 +121,7 @@ def analyze_packet(packet):
             src_ip,
             dst_ip,
             protocol,
-            f"Anomaly score = {ml_result['Anomaly_score']}"
+            f"Anomaly score = {ml_result}"
         )
 
 
